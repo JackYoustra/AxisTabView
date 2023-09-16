@@ -56,6 +56,10 @@ public struct AxisTabView<SelectionValue, Background, Content> : View where Sele
                 .overlayPreferenceValue(ATTabItemPreferenceKey.self) { items in
                     if !items.isEmpty {
                         let items = items.prefix(getLimitItemCount(size: proxy.size, itemCount: items.count))
+                        // Bad hack to prevent initial animation glitch
+                        let _ = {
+                            stateViewModel.tags = items.map{ $0.tag as! SelectionValue }
+                        }()
                         let state = ATTabState(constant: constant, itemCount: items.count, previousIndex: stateViewModel.previousIndex, currentIndex: stateViewModel.indexOfTag(selection.wrappedValue), size: proxy.size, safeAreaInsets: proxy.safeAreaInsets)
                         VStack(spacing: 0) {
                             if constant.axisMode == .bottom {
