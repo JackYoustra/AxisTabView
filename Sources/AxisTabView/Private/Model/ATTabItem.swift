@@ -34,14 +34,12 @@ struct ATTabItem: Identifiable {
     let tag: Any
     
     /// The tab button view in the unselected state.
-    let normal: AnyView
-    
-    /// The tab button view in the selected state.
-    let select: AnyView
-    
-    init<V: View>(tag: Any, normal: V, select: V) {
+    let normal: (Bool) -> AnyView
+
+    init<V: View>(tag: Any, @ViewBuilder normal: @escaping (Bool) -> V) {
         self.tag = tag
-        self.normal = AnyView(normal)
-        self.select = AnyView(select)
+        self.normal = {
+            AnyView(normal($0))
+        }
     }
 }

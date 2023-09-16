@@ -105,13 +105,10 @@ public struct AxisTabView<SelectionValue, Background, Content> : View where Sele
             ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                 if constant.tab.spacingMode == .center {
                     ZStack {
-                        if item.tag as! SelectionValue == self.selection.wrappedValue {
-                            item.select
-                                .transition(constant.tab.transition)
-                        }else {
-                            item.normal
-                                .transition(constant.tab.transition)
-                        }
+                        let boolValue = item.tag as! SelectionValue == self.selection.wrappedValue
+                        item
+                            .normal(boolValue)
+                            .transition(constant.tab.transition)
                     }
                     .frame(width: getItemWidth(tag: item.tag as! SelectionValue),
                            height: constant.tab.normalSize.height)
@@ -127,13 +124,7 @@ public struct AxisTabView<SelectionValue, Background, Content> : View where Sele
                 }else {
                     Spacer()
                     ZStack {
-                        if item.tag as! SelectionValue == self.selection.wrappedValue {
-                            item.select
-                                .transition(constant.tab.transition)
-                        }else {
-                            item.normal
-                                .transition(constant.tab.transition)
-                        }
+                        item.normal(item.tag as! SelectionValue == self.selection.wrappedValue)
                     }
                     .frame(width: getItemWidth(tag: item.tag as! SelectionValue),
                            height: constant.tab.normalSize.height)

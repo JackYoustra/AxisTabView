@@ -34,7 +34,7 @@ struct ATTabItemPreferenceKey: PreferenceKey {
     }
 }
 
-struct ATTabItemModifier<SelectionValue: Hashable, N: View, S: View>: ViewModifier {
+struct ATTabItemModifier<SelectionValue: Hashable, N: View>: ViewModifier {
     
     @EnvironmentObject var viewModel: ATViewModel<SelectionValue>
     @EnvironmentObject var stateViewModel: ATStateViewModel<SelectionValue>
@@ -43,10 +43,7 @@ struct ATTabItemModifier<SelectionValue: Hashable, N: View, S: View>: ViewModifi
     var tag: SelectionValue
     
     /// The tab button view in the unselected state.
-    var normal: N
-    
-    /// The tab button view in the selected state.
-    var select: S
+    @ViewBuilder var normal: (Bool) -> N
     
     /// Handle transition animations in the content view.
     private var transition: AnyTransition {
@@ -59,7 +56,7 @@ struct ATTabItemModifier<SelectionValue: Hashable, N: View, S: View>: ViewModifi
     }
     
     func body(content: Content) -> some View {
-        let item = ATTabItem(tag: tag, normal: AnyView(normal), select: AnyView(select))
+        let item = ATTabItem(tag: tag, normal: normal)
         ZStack {
             if tag == viewModel.selection {
                 content

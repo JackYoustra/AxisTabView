@@ -31,8 +31,20 @@ public extension View {
                  S: View>(tag: SelectionValue,
                           @ViewBuilder normal: @escaping () -> N,
                           @ViewBuilder select: @escaping () -> S) -> some View {
+        return modifier(ATTabItemModifier(tag: tag,
+                                   normal: {
+            if $0 {
+                select()
+            } else {
+                normal()
+            }
+        }))
+    }
+    
+    func tabItem<SelectionValue: Hashable,
+                 N: View>(tag: SelectionValue,
+                          @ViewBuilder normal: @escaping (Bool) -> N) -> some View {
         modifier(ATTabItemModifier(tag: tag,
-                                   normal: normal(),
-                                   select: select()))
+                                   normal: normal))
     }
 }

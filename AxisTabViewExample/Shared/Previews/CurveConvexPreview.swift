@@ -116,11 +116,14 @@ struct ControlView: View {
                 }
             }
         }
-        .tabItem(tag: tag, normal: {
-            TabButton(constant: $constant, selection: $selection, tag: tag, isSelection: false, systemName: systemName)
-        }, select: {
-            TabButton(constant: $constant, selection: $selection, tag: tag, isSelection: true, systemName: systemName)
+        .tabItem(tag: tag, normal: { selected in
+                TabButton(constant: $constant, selection: $selection, tag: tag, isSelection: selected, systemName: systemName)
         })
+//        .tabItem(tag: tag, normal: {
+//            TabButton(constant: $constant, selection: $selection, tag: tag, isSelection: false, systemName: systemName)
+//        }, select: {
+//            TabButton(constant: $constant, selection: $selection, tag: tag, isSelection: true, systemName: systemName)
+//        })
     }
     
     private func getTopPadding() -> CGFloat {
@@ -158,6 +161,18 @@ struct TabButton: View {
         .background(isSelection ? Color.red : Color.clear)
         .clipShape(Capsule())
         .offset(y: y)
+        .onChange(of: isSelection) { newValue in
+            if newValue {
+                withAnimation(.easeInOut(duration: 0.26)) {
+                    y = constant.axisMode == .top ? 22 : -22
+                }
+                withAnimation(.easeInOut(duration: 0.3).delay(0.25)) {
+                    y = constant.axisMode == .top ? 17 : -17
+                }
+            }else {
+                y = 0
+            }
+        }
         .onAppear {
             if isSelection {
                 withAnimation(.easeInOut(duration: 0.26)) {
